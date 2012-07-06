@@ -1,29 +1,15 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Alexander Li'
 
-import sys
-import traceback
 import time
 import uuid
-import django
-import django.db
-import django.db.backends
-import django.db.backends.mysql
-from django.db import connections, transaction
 from zlib import compress, decompress
 from cPickle import dumps, loads
-import MySQLdb
-import MySQLdb.connections
-from logging import log, WARNING, ERROR
-from common import db, cache, mydb
-from common.utils import tou, tob
-
-
-TIMEOUT = 60 * 60 * 2
-CACHE = cache.OBJ
-
+from logging import log, WARNING, ERROR,INFO
+from utils import tou, tob
+import session
 import datetime
-
+from free4my import current_session
 myid = lambda :str(uuid.uuid4())
 
 class Oper(object):
@@ -68,7 +54,7 @@ def _local_type_to_db_column(column):
 
 def _tb_exists(conn, table_name):
     try:
-        conn.query("SELECT `id` FROM `%s` LIMIT 1" % table_name, [])
+        conn.query("SELECT `id` FROM `%s` LIMIT 1" % table_name)
         return True
     except:
         return False
@@ -86,7 +72,6 @@ class FkColumn(object):
 
 class Empty:
     pass
-
 
 class ModelBase(type):
     def __new__(cls, name, bases, attrs):
@@ -122,14 +107,11 @@ class ModelBase(type):
                 if isinstance(attr, type(func_type)):
                     Funcs[attr_name] = attr
         if 'id' not in columns:
-            auto = True
             columns['id'] = Column(unicode, max_length=36)
         if not hasattr(ext_meta, "table_name"):
             table_name = name
         else:
             table_name = ext_meta.table_name
-        if not hasattr(ext_meta, "connection"):
-            raise AttributeError, "Meta connection missing"
         meta_attrs = dir(ext_meta)
         indexes = {}
         for attr_name in meta_attrs:
@@ -137,7 +119,7 @@ class ModelBase(type):
             if isinstance(meta_attr, Index):
                 indexes[attr_name] = meta_attr
         indexes.update(ExIndex)
-        manager = Manager(ext_meta.connection, ext_meta.table_name, new_class, name, columns, **indexes)
+        manager = Manager(ext_meta.table_name, new_class, name, columns, **indexes)
         setattr(new_class, "_columns", columns)
         setattr(new_class, "_table_name", table_name)
         setattr(new_class, "objects", manager)
@@ -158,9 +140,6 @@ class DynamicBase(dict):
             self.update({"_auto_id":kwargs['_auto_id']})
         for key in self._columns:
             if key in kwargs:
-
-                s = self._columns[key]
-
                 if self._columns[key].map_class:
                     if isinstance(kwargs[key], self._columns[key].map_class):
                         self.update({key:kwargs[key].id})
@@ -176,20 +155,6 @@ class DynamicBase(dict):
 
     def __getattr__(self, attr_name):
         return self[attr_name]
-#        if attr_name == u"_updated":
-#            return self[attr_name]
-#        if attr_name in self._columns:
-#            if not attr_name in self:
-#                if self._columns[attr_name] == datetime.datetime:
-#                    self.update({attr_name:datetime.datetime.now()})
-#                else:
-#                    self.update({attr_name:self._columns[attr_name].allowed_type()})
-#
-#            if self._columns[attr_name].map_class:
-#                return self._columns[attr_name].map_class.objects.get(dict.__getitem__(self, attr_name))
-#            else:
-#                return self[attr_name]
-#        raise AttributeError, "no attribute %s" % attr_name
 
     def __setattr__(self, attr_name, value):
         if attr_name == "_updated" or attr_name=="_auto_id":
@@ -249,18 +214,18 @@ class DynamicBase(dict):
 
 
 class Manager(object):
-    def __init__(self, conn, table_name, obj_type, class_name, columns, **kwargs):
-        self.conn = conn
+    def __init__(self, table_name, obj_type, class_name, columns, **kwargs):
+        self.session=current_session()
         self.table_name = table_name
         self.columns = columns
         self.index_list = kwargs
         self.data_type = obj_type
-        self.obj_acc = ObjectAcc(self.conn, self.table_name)
+        self.obj_acc = ObjectAcc(self.session, self.table_name)
         self.idx_accs = {}
         for idx in self.index_list:
             idxobj = self.index_list[idx]
             setattr(self, idx, idxobj)
-            idxobj.config(self.get, self.conn, class_name, self.columns)
+            idxobj.config(self.get, self.session, class_name, self.columns)
             self.idx_accs[idx] = idxobj
 
     def create(self, **kwargs):
@@ -301,15 +266,9 @@ class Manager(object):
             idx_acc.truncate()
 
     def create_table(self):
-
-        if _tb_exists(self.conn, self.table_name):
-            try:
-
-                self.conn.execute("DROP TABLE `%s`;" % self.table_name, [])
-
-            except:
-                pass
-        sql = """CREATE TABLE `%(table_name)s` (
+        conn=self.session().connection
+        if not _tb_exists(conn, self.table_name):
+            sql = """CREATE TABLE `%(table_name)s` (
 `auto_id` int(11) NOT NULL AUTO_INCREMENT,
 `id` VARCHAR(36) NOT NULL,
 `object` varbinary(20000) NOT NULL,
@@ -318,101 +277,42 @@ PRIMARY KEY (`auto_id`),
 UNIQUE KEY (`id`),
 INDEX (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-        """ % dict(table_name=self.table_name)
-        self.conn.execute(sql, [])
-        for index, idx_acc in self.idx_accs.iteritems():
-            idx_acc.create_table()
+    """ % dict(table_name=self.table_name)
+            conn.execute(sql)
+            for index, idx_acc in self.idx_accs.iteritems():
+                idx_acc.create_table()
+
+
 
     def sync_table(self):
-        if not _tb_exists(self.conn, self.table_name):
+        session=self.session()
+        if not _tb_exists(session.connection, self.table_name):
             self.create_table()
             return
         else:
             missing_idx = []
             for idx_name, idx_obj in self.index_list.iteritems():
-                if not _tb_exists(self.conn, idx_obj.table_name):
+                if not _tb_exists(session.connection, idx_obj.table_name):
                     missing_idx.append(idx_obj)
                     idx_obj.create_table()
             #flush_idx
-            data = self.conn.query("SELECT `id` FROM `%s` ORDER BY `auto_id` ASC" % self.table_name, [])
+            data = session.connection.query("SELECT `id` FROM `%s` ORDER BY `auto_id` ASC" % self.table_name)
             total=len(data)
             idx=1
             error_arr=[]
-            for item in data:
-                data_item = self.get(item.id)
-                print "%s/%s complete %s errors"%(idx,total,len(error_arr))
-                for idx_obj in missing_idx:
-                    if not idx_obj.push_index(data_item):
-                        error_arr.append(item.id)
-                idx+=1
-            if error_arr:
-                print "error feeds:\n"
-                for i in error_arr:
-                    print i
-            self.conn.execute("COMMIT;", [])
-
-class ObjectAcc(object):
-    def __init__(self, connection, table):
-        self.table = table
-        self.connection = connection
-
-    def get_object(self, id=None):
-        raw_id = "o-%s" % tob(id)
-        try:
-            if cache.exists(CACHE, raw_id):
-                data = cache.get(CACHE, raw_id)
-                if "_auto_id" in data:
-                    return loads(data)
-        except:
-            log(ERROR,"REDIS read error")
-        sql = "SELECT `auto_id`,`id`,`object`,`updated` FROM `"+self.table+"` WHERE `id`=%s"
-        rows = self.connection.query(sql, [tou(id)])
-        if rows:
-            data = rows[0].object
-            objstr = decompress(data)
-            obj = loads(objstr)
-            obj.update(dict(id=id))
-            obj["_updated"] = rows[0].updated
-            obj["_auto_id"] =rows[0].auto_id
-            try:
-                cache.set(CACHE, raw_id, dumps(obj), time_out=TIMEOUT)
-            except:
-                log(ERROR,"REDIS write error")
-            return obj
-
-    def set_object(self, id=None, object=None):
-        datas = compress(dumps(object))
-        if not id:
-            entity_id = myid()
-        else:
-            entity_id = id
-        timestamp=datetime.datetime.now()
-        sql = "INSERT INTO `" + self.table + "` (`id`,`object`,`updated`) VALUES (%s,%s,%s)"
-        ret=self.connection.execute(sql, [entity_id, datas,timestamp])
-        return entity_id,ret
-
-    def update_object(self,object=None):
-        raw_id = "o-%s" %object['id']
-        datas = compress(dumps(object))
-        key_id=object["_auto_id"]
-        timestamp=datetime.datetime.now()
-        sql = "UPDATE `" + self.table + "` SET `object`=%s,`updated`=%s WHERE `auto_id`=%s"
-        self.connection.execute(sql, [datas,timestamp,key_id])
-        object['_updated'] = timestamp
-        try:
-            cache.set(CACHE, raw_id, dumps(object), time_out=TIMEOUT)
-        except:
-            log(ERROR,"REDIS update error")
-
-    def delete_object(self,object=None):
-        raw_id = "o-%s" % object['id']
-        key_id=object["_auto_id"]
-        sql = "DELETE FROM `" + self.table + "` WHERE `auto_id`=%s"
-        self.connection.execute(sql, [key_id])
-        try:
-            cache.delete(CACHE, raw_id)
-        except:
-            log(ERROR,"REDIS delete error")
+            if missing_idx:
+                for item in data:
+                    data_item = self.get(item.id)
+                    print "%s/%s complete %s errors"%(idx,total,len(error_arr))
+                    for idx_obj in missing_idx:
+                        if not idx_obj.push_index(data_item):
+                            error_arr.append(item.id)
+                    idx+=1
+                if error_arr:
+                    print "error feeds:\n"
+                    for i in error_arr:
+                        print i
+            session.connection.execute("COMMIT;")
 
 class Index(object):
     def __init__(self, *columns, **kwargs):
@@ -427,9 +327,9 @@ class Index(object):
         self.unique = kwargs['unique'] if "unique" in kwargs else False
         self.limit = None
 
-    def config(self, getone, conn, class_name, columns):
+    def config(self, getone, session, class_name, columns):
         self.get_one = getone
-        self.connection = conn
+        self.session=session
         self.column_objects = columns
         if not self.table_name:
             self.table_name = "%s_idx_%s" % (class_name.lower(), "_".join(self.columns))
@@ -440,6 +340,7 @@ class Index(object):
         return False
 
     def push_index(self, obj):
+        session=self.session()
         entity_id = obj.id
         sql = "INSERT INTO `" + self.table_name + "` ( `entity_id`,"
         vsql = ""
@@ -459,10 +360,11 @@ class Index(object):
         sql = sql[:-1]
         vsql += "%s"
         sql += ") VALUES (" + vsql + ")"
-        self.connection.execute(sql, values)
+        session.connection.execute(sql, *values)
         return True
 
     def update_index(self, obj):
+        session=self.session()
         sql = "UPDATE `" + self.table_name + "` SET "
         values = []
         for field in self.columns:
@@ -475,20 +377,23 @@ class Index(object):
         sql = sql[:-1]
         sql += " WHERE `entity_id`=%s"
         values.append(obj["id"])
-        self.connection.execute(sql, values)
+        session.connection.execute(sql, *values)
 
     def delete_index(self, id):
+        session=self.session()
         sql = "DELETE FROM `" + self.table_name + "` WHERE `entity_id`=%s"
-        self.connection.execute(sql, [id])
+        session.connection.execute(sql, id)
 
     def truncate(self):
+        session=self.session()
         sql = "truncate table `%s`" % self.table_name
-        self.connection.execute(sql)
+        session.connection.execute(sql)
 
     def create_table(self):
         """
         `email` varchar(50) NOT NULL,
         """
+        session=self.session()
         fields_list = []
         for col_name, col_obj in self.column_objects.iteritems():
 
@@ -498,11 +403,6 @@ class Index(object):
         index_type = "UNIQUE KEY" if self.unique else "INDEX"
         index_fileds = ",".join("`" + f + "`" for f in self.columns)
 
-        if _tb_exists(self.connection, self.table_name):
-            try:
-                self.connection.execute("DROP TABLE `%s`;" % self.table_name, [])
-            except:
-                pass
         sql = """CREATE TABLE `%(table_name)s` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 `entity_id` VARCHAR(36) NOT NULL,
@@ -513,11 +413,12 @@ UNIQUE KEY (`entity_id`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
         """ % dict(table_name=self.table_name, fields=field_str, idx_type=index_type, idx_name=self.table_name, idx_fields=index_fileds)
 
-        self.connection.execute(sql, [])
+        session.connection.execute(sql)
 
     def raw_query(self, sql, *argv):
+        session=self.session()
         raw_sql = sql.replace('[object]', '`%s`' % self.table_name)
-        results = self.connection.query(raw_sql, argv)
+        results = session.connection.query(raw_sql, *argv)
         return [self.get_one(item.entity_id) for item in results]
 
     def _prepare_sql(self, **kwargs):
@@ -531,24 +432,27 @@ UNIQUE KEY (`entity_id`),
         return sql
 
     def get(self, **kwargs):
+        session=self.session()
         sql = self._prepare_sql(**kwargs)
         sql += " LIMIT 1"
-        results = self.connection.query(sql, self.params)
+        results = session.connection.query(sql, *self.params)
         if results:
             #log(ERROR,"idx sql = %s"%sql)
             return self.get_one(results[0].entity_id)
 
     def group_count(self,key):
+        session=self.session()
         sql="SELECT `%(key)s`, count(1) as `ct` from `%(table)s` GROUP BY `%(key)s` ORDER BY `ct` DESC"%dict(key=key,table=self.table_name)
-        results=self.connection.query(sql,[])
+        results=session.connection.query(sql,[])
         if results:
             return results
         return []
 
     def exists(self,**kwargs):
+        session=self.session()
         sql = self._prepare_sql(**kwargs)
         sql = sql.replace("`entity_id`","count(1) as `ct`")
-        results = self.connection.query(sql, self.params)
+        results = session.connection.query(sql, *self.params)
         if results:
             if results[0].ct:
                 return True
@@ -556,9 +460,10 @@ UNIQUE KEY (`entity_id`),
 
 
     def count(self, **kwargs):
+        session=self.session()
         sql = self.store_sql
         sql = sql.replace('`entity_id`', 'count(*) as c')
-        results = self.connection.query(sql, self.params)
+        results = session.connection.query(sql, *self.params)
         if results:
             return results[0].c
 
@@ -594,11 +499,82 @@ UNIQUE KEY (`entity_id`),
         if self.limit:
             sql += " " + self.limit
         try:
-            results = self.connection.query(sql, self.params)
+            session=self.session()
+            log(ERROR,sql)
+            results = session.connection.query(sql, *self.params)
             for idx_item in results:
                 yield self.get_one(idx_item.entity_id)
         except Exception, e:
             log(ERROR, "\nsql:%s\nparam:%s" % (sql, self.params))
             raise
 
+class ObjectAcc(object):
+    def __init__(self, session, table):
+        self.table = table
+        self.session=session
 
+    def get_object(self, id=None):
+        session=self.session()
+        raw_id = "o-%s" % tob(id)
+        try:
+            if session.check_obj(raw_id):
+                data = session.get_obj(raw_id)
+                if "_auto_id" in data:
+                    return loads(data)
+        except:
+            log(ERROR,"REDIS read error")
+
+        sql = "SELECT `auto_id`,`id`,`object`,`updated` FROM `"+self.table+"` WHERE `id`=%s"
+        rows = session.connection.query(sql, tou(id))
+        if rows:
+            data = rows[0].object
+            objstr = decompress(data)
+            obj = loads(objstr)
+            obj.update(dict(id=id))
+            obj["_updated"] = rows[0].updated
+            obj["_auto_id"] =rows[0].auto_id
+            try:
+                session.set_obj(raw_id,dumps(obj))
+            except:
+                log(ERROR,"REDIS write error")
+            return obj
+
+    def set_object(self, id=None, object=None):
+        session=self.session()
+        r_data=dumps(object)
+        datas = compress(r_data)
+        if not id:
+            entity_id = myid()
+        else:
+            entity_id = id
+        timestamp=datetime.datetime.now()
+        sql = "INSERT INTO `" + self.table + "` (`id`,`object`,`updated`) VALUES (%s,%s,%s)"
+        ret=session.connection.execute(sql, entity_id, datas,timestamp)
+        raw_id = "o-%s" % tob(entity_id)
+        session.set_obj(raw_id,r_data)
+        return entity_id,ret
+
+    def update_object(self,object=None):
+        session=self.session()
+        raw_id = "o-%s" %object['id']
+        datas = compress(dumps(object))
+        key_id=object["_auto_id"]
+        timestamp=datetime.datetime.now()
+        sql = "UPDATE `" + self.table + "` SET `object`=%s,`updated`=%s WHERE `auto_id`=%s"
+        session.connection.execute(sql, datas,timestamp,key_id)
+        object['_updated'] = timestamp
+        try:
+            session.set_obj(raw_id,dumps(object))
+        except:
+            log(ERROR,"REDIS update error")
+
+    def delete_object(self,object=None):
+        session=self.session()
+        raw_id = "o-%s" % object['id']
+        key_id=object["_auto_id"]
+        sql = "DELETE FROM `" + self.table + "` WHERE `auto_id`=%s"
+        session.connection.execute(sql, key_id)
+        try:
+            session.del_obj(raw_id)
+        except:
+            log(ERROR,"REDIS delete error")

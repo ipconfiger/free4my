@@ -8,7 +8,7 @@ import MySQLdb.cursors
 import itertools
 import logging
 import time
-from common import Row
+from utils import Row
 
 class Connection(object):
     """A lightweight wrapper around MySQLdb DB-API connections.
@@ -203,6 +203,15 @@ class Connection(object):
         except OperationalError:
             logging.error("Error connecting to MySQL on %s", self.host)
             self.reconnect()
+
+    def rollback(self):
+        try:
+            self._ensure_connected()
+            self._db.rollback()
+        except OperationalError:
+            logging.error("Error connecting to MySQL on %s", self.host)
+            self.reconnect()
+        
 
 # Fix the access conversions to properly recognize unicode/binary
 FIELD_TYPE = MySQLdb.constants.FIELD_TYPE
