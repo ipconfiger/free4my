@@ -3,6 +3,8 @@ import threading
 import db
 from session import Session
 
+__version__="0.10"
+
 g=threading.local()
 
 class DbContext(object):
