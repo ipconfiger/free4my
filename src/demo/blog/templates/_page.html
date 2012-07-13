@@ -1,0 +1,18 @@
+<div class="blank20"></div>
+<div class="pagination">
+  <ul>
+  {%for pid,url in page_links%}
+    {%if pid%}
+        {%if pid==page_id%}
+            <li class="active">
+            <a href="{{url}}">{{pid}}</a>
+            </li>
+        {%else%}
+            <li><a href="{{url}}">{{pid}}</a></li>
+        {%endif%}
+    {%else%}
+    <li class="disabled"><a>...</a></li>
+    {%endif%}
+  {%endfor%}
+  </ul>
+</div>

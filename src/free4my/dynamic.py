@@ -55,8 +55,10 @@ def _local_type_to_db_column(column):
 def _tb_exists(conn, table_name):
     try:
         conn.query("SELECT `id` FROM `%s` LIMIT 1" % table_name)
+        log(ERROR,"table %s exists"%table_name)
         return True
     except:
+        log(ERROR,"table %s not exists"%table_name)
         return False
 
 class Column(object):
@@ -244,6 +246,17 @@ class Manager(object):
         data = self.obj_acc.get_object(id=id)
         if data:
             return self.data_type(**data)
+
+    def all(self):
+        sql="SELECT `id` FROM %s"%self.table_name
+        try:
+            session=self.session()
+            results = session.connection.query(sql)
+            for idx_item in results:
+                yield self.obj_acc.get_object(id=idx_item.id)
+        except Exception, e:
+            log(ERROR, "\nsql:%s" % sql)
+            raise
 
     def update(self, data):
         self.obj_acc.update_object(object=data)
@@ -437,7 +450,6 @@ UNIQUE KEY (`entity_id`),
         sql += " LIMIT 1"
         results = session.connection.query(sql, *self.params)
         if results:
-            #log(ERROR,"idx sql = %s"%sql)
             return self.get_one(results[0].entity_id)
 
     def group_count(self,key):

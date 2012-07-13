@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{%block content%}
+<div class="blank50"></div>
+<div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span6">
+        <form class="form-horizontal" method="POST">
+          <fieldset>
+            <legend>Login</legend>
+            <div class="control-group">
+              <label class="control-label" for="loginid">Login ID</label>
+              <div class="controls">
+                <input type="text" name="login_id" class="input-xlarge" id="loginid">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="password">Password</label>
+              <div class="controls">
+                <input type="password" class="input-xlarge" name="password" id="password">
+              </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+          </fieldset>
+        </form>
+    </div>
+</div>
+{%endblock%}

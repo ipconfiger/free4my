@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us">
+    <head>
+        <title>{{config.site_name}}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='bootstrap.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='blog.css')}}" />
+        <script type="text/javascript" src="{{url_for('static',filename='jquery-1.7.2.min.js')}}"></script>
+        <script type="text/javascript" src="{{url_for('static',filename='showdown.js')}}"></script>
+        <script type="text/javascript" src="{{url_for('static',filename='highlight.pack.js')}}"></script>
+        <script type="text/javascript">
+        $(function(){
+            {%if error%}
+                alert('{{error}}');
+            {%endif%}
+            var converter = new Showdown.converter();
+            $(".summary").each(function(i){
+                var mkdown=$(this).html();
+                $(this).html(converter.makeHtml(mkdown));
+            });
+        });
+        </script>
+        {%block header%}
+        {%endblock%}
+    </head>
+    <body>
+        <div class="container" id="header">
+        <div class="row">
+            <div class="span3" id="logo"><H2><a href="/">{{config.site_name}}</a></H2></div>
+        </div>
+        <div class="row">
+            <div class="span9" id="left">
+        {%block content%}
+        {%endblock%}
+            </div>
+            <div class="span3" id="nav">
+                {%include "_nav.html"%}
+            </div>
+        </div>
+        <div id="fotter" class="blank20">
+            <div class="center">{{config.copyright}}</div>
+            <div class="center">powered by free4my from alexander.lee</div>
+        </div>
+        <div>
+    </body>
+</html>

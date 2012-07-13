@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{%block header%}
+<script type="text/javascript">
+    $(function(){
+        $("#delete_post").click(function(){
+            $.ajax({
+                url:'/blog/{{blog.short_key}}',
+                type: 'DELETE',
+                success: function(result) {
+                    location.href="/";
+                }
+            });
+            return false;
+        })
+        hljs.tabReplace = '    ';
+        hljs.initHighlighting();
+    });
+</script>
+{%endblock%}
+{%block content%}
+{%if blog%}
+<h3>{{blog.title}}</h3>
+<hr/>
+<div class="summary">
+    {{blog.content|safe}}
+</div>
+<div class="alert alert-info blank20">
+    {%if is_login %}
+    <div class="fr ml20"> <a href="/edit/blog/{{blog.short_key}}" id="edit_post">Edit</a> </div>
+    <div class="fr ml20"> <a href="javascript:void(0);" id="delete_post">Delete</a> </div>
+    {%endif%}
+    <div class="fr ml20">viewer:{{blog.view_count}}</div>
+    <div class="blank"></div>
+</div>
+{%else%}
+<div class="center"><h3>This blog was deleted</h3></div>
+{%endif%}
+{%endblock%}

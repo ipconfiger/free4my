@@ -1,0 +1,16 @@
+{% extends "admin_base.html" %}
+{%block view%}
+
+<form class="well" method="POST">
+  <label>Blog Title</label>
+  <input type="text" class="span8" id="title" name="title" placeholder="Put your blog tilte here…">
+  <span class="help-block">Must less than 50 characters.</span>
+  <label>Blog Content</label>
+  <textarea id="content" name="content" class="span8"></textarea>
+  <span class="help-block">Use markdown to format your post.</span>
+  <label>Short Name</label>
+  <input type="text" class="span2" id="short_name" name="short_name" placeholder="Input the short name">
+  <span class="help-block">Short name for this blog.</span>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{%endblock%}

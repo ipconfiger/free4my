@@ -7,10 +7,15 @@ g=threading.local()
 
 class DbContext(object):
     def __init__(self,**kwargs):
+        self.params=dict(**kwargs)
         self.conn_pool=threading.local()
         self.conn_pool.current=db.Connection(**kwargs)
 
     def get_connection(self):
+        try:
+            conn=self.conn_pool.current
+        except:
+            self.conn_pool.current=db.Connection(**self.params)
         return self.conn_pool.current
 
 def session_maker(context,**kwargs):

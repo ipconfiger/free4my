@@ -4,12 +4,196 @@
 		"selected_items":
 		[
 			[
+				"PA",
+				"PAGE_SIZE	(global, instance)"
+			],
+			[
+				"que",
+				"query	(local, instance)"
+			],
+			[
+				"creat",
+				"create_date"
+			],
+			[
+				"by_",
+				"by_date"
+			],
+			[
+				"date",
+				"date_files	(local, instance)"
+			],
+			[
+				"tim",
+				"time_tuple	(local, instance)"
+			],
+			[
+				"short",
+				"short_key"
+			],
+			[
+				"sho",
+				"by_short"
+			],
+			[
+				"crea",
+				"create_date"
+			],
+			[
+				"shor",
+				"short_key"
+			],
+			[
+				"sh",
+				"short_name	(local, instance)"
+			],
+			[
 				"by",
-				"by_regist"
+				"by_short"
+			],
+			[
+				"uu",
+				"uuid4"
+			],
+			[
+				"blo",
+				"blog_params"
+			],
+			[
+				"cre",
+				"create_date"
+			],
+			[
+				"mar",
+				"margin-left"
+			],
+			[
+				"che",
+				"check_authenticate	(global, function)"
+			],
+			[
+				"view",
+				"view_count"
+			],
+			[
+				"get",
+				"get_flashed_messages	(imported, instance)"
+			],
+			[
+				"re",
+				"redirect	(imported, instance)"
 			],
 			[
 				"pass",
-				"password"
+				"password	(local, instance)"
+			],
+			[
+				"for",
+				"form"
+			],
+			[
+				"login",
+				"login_id"
+			],
+			[
+				"user",
+				"user_name"
+			],
+			[
+				"ex",
+				"exception	(local, instance)"
+			],
+			[
+				"meth",
+				"methods"
+			],
+			[
+				"marg",
+				"margin-top"
+			],
+			[
+				"text",
+				"text-align"
+			],
+			[
+				"url",
+				"url_for	(imported, instance)"
+			],
+			[
+				"pas",
+				"password	(local, instance)"
+			],
+			[
+				"lo",
+				"login_id	(local, instance)"
+			],
+			[
+				"lg",
+				"login_id"
+			],
+			[
+				"req",
+				"request	(imported, instance)"
+			],
+			[
+				"loc",
+				"locals	(builtin, function)"
+			],
+			[
+				"ap",
+				"append"
+			],
+			[
+				"has",
+				"hasattr	(builtin, function)"
+			],
+			[
+				"con",
+				"conn_pool"
+			],
+			[
+				"exc",
+				"except	(keyword, instance)"
+			],
+			[
+				"init",
+				"init_site	(global, function)"
+			],
+			[
+				"ch",
+				"check_authenticate	(global, function)"
+			],
+			[
+				"fa",
+				"False"
+			],
+			[
+				"check",
+				"check_password"
+			],
+			[
+				"tab",
+				"table_name	(local, instance)"
+			],
+			[
+				"idx",
+				"idx_item	(local, instance)"
+			],
+			[
+				"S",
+				"SiteConfig	(global, class)"
+			],
+			[
+				"inp",
+				"input_password	(local, instance)"
+			],
+			[
+				"new",
+				"new_password	(local, instance)"
+			],
+			[
+				"hash",
+				"hash_passwd	(global, function)"
 			],
 			[
 				"max",
@@ -52,10 +236,6 @@
 				"Http404	(imported, instance)"
 			],
 			[
-				"ex",
-				"expire"
-			],
-			[
 				"acc",
 				"accessToken	(local, instance)"
 			],
@@ -64,32 +244,12 @@
 				"refresh_token"
 			],
 			[
-				"re",
-				"request_api	(attribute, function)"
-			],
-			[
-				"get",
-				"get_flash	(imported, function)"
-			],
-			[
-				"login",
-				"login_flag	(local, instance)"
-			],
-			[
 				"wr",
 				"wrapperUri	(local, instance)"
 			],
 			[
 				"red",
 				"redirectUrl	(local, instance)"
-			],
-			[
-				"url",
-				"urllib	(imported, module)"
-			],
-			[
-				"check",
-				"check_app_login"
 			],
 			[
 				"requ",
@@ -116,16 +276,8 @@
 				"login_flag	(local, instance)"
 			],
 			[
-				"tim",
-				"set_timelock"
-			],
-			[
 				"log",
 				"login_item	(local, instance)"
-			],
-			[
-				"hash",
-				"hash_token	(local, instance)"
 			],
 			[
 				"data",
@@ -164,24 +316,12 @@
 				"weibo_location	(local, instance)"
 			],
 			[
-				"for",
-				"force_target	(global, function)"
-			],
-			[
-				"new",
-				"new_tag	(local, instance)"
-			],
-			[
 				"i",
 				"iteritems	(builtin, function)"
 			],
 			[
 				"ppt",
 				"ppt_item"
-			],
-			[
-				"cre",
-				"create_or_update_flist	(global, function)"
 			],
 			[
 				"User",
@@ -194,10 +334,6 @@
 			[
 				"Us",
 				"UserFriend"
-			],
-			[
-				"text",
-				"text200	(global, function)"
 			],
 			[
 				"html",
@@ -240,20 +376,12 @@
 				"uuid4	(imported, instance)"
 			],
 			[
-				"con",
-				"content	(global, instance)"
-			],
-			[
 				"po",
 				"post_feed	(global, function)"
 			],
 			[
 				"weibo",
 				"weibo_url	(local, instance)"
-			],
-			[
-				"req",
-				"request	(imported, instance)"
 			],
 			[
 				"find",
@@ -316,10 +444,6 @@
 				"unpack_value	(global, function)"
 			],
 			[
-				"date",
-				"datetime	(builtin, class)"
-			],
-			[
 				"str",
 				"struct	(imported, module)"
 			],
@@ -330,10 +454,6 @@
 			[
 				"all",
 				"exe_allowed"
-			],
-			[
-				"user",
-				"user_id	(local, instance)"
 			],
 			[
 				"get_pro",
@@ -394,126 +514,6 @@
 			[
 				"dr",
 				"draft	(local, instance)"
-			],
-			[
-				"wea",
-				"weather"
-			],
-			[
-				"che",
-				"check_form"
-			],
-			[
-				"pos",
-				"post_data"
-			],
-			[
-				"to",
-				"total_record	(local, instance)"
-			],
-			[
-				"mood",
-				"mood_v"
-			],
-			[
-				"inpu",
-				"input"
-			],
-			[
-				"Con",
-				"Content"
-			],
-			[
-				"c",
-				"create_date	(attribute, instance)"
-			],
-			[
-				"h",
-				"has_key	(builtin, function)"
-			],
-			[
-				"C",
-				"CLIENT_SECRET	(imported, instance)"
-			],
-			[
-				"w",
-				"wrapper	(local, function)"
-			],
-			[
-				"enc",
-				"encrypt_des	(global, function)"
-			],
-			[
-				"dum",
-				"dumps	(builtin, function)"
-			],
-			[
-				"obj",
-				"obj_str	(local, instance)"
-			],
-			[
-				"lo",
-				"loads	(builtin, function)"
-			],
-			[
-				"dec",
-				"decrypt_des	(global, function)"
-			],
-			[
-				"refe",
-				"refresh_token"
-			],
-			[
-				"ema",
-				"email_domain"
-			],
-			[
-				"em",
-				"email_domain"
-			],
-			[
-				"send",
-				"ajaxSend"
-			],
-			[
-				"loc",
-				"time_lock"
-			],
-			[
-				"conf",
-				"config	(local, instance)"
-			],
-			[
-				"confi",
-				"config_ls	(local, instance)"
-			],
-			[
-				"vis",
-				"visit_id	(local, instance)"
-			],
-			[
-				"use",
-				"user_id	(local, instance)"
-			],
-			[
-				"refu",
-				"ref_user	(local, instance)"
-			],
-			[
-				"insta",
-				"installed_apps"
-			],
-			[
-				"in",
-				"installed_app_temp	(local, instance)"
-			],
-			[
-				"pro",
-				"productType"
-			],
-			[
-				"pty",
-				"ptype"
 			]
 		]
 	},
@@ -523,39 +523,50 @@
 			"file": "src/free4my/__init__.py",
 			"settings":
 			{
-				"buffer_size": 560,
+				"buffer_size": 753,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/free4my/session.py",
+			"file": "src/demo/blog/blog.py",
 			"settings":
 			{
-				"buffer_size": 1145,
+				"buffer_size": 10871,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/free4my/dynamic.py",
+			"file": "src/demo/blog/templates/blog_list.html",
 			"settings":
 			{
-				"buffer_size": 20149,
+				"buffer_size": 487,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/demo/test.py",
+			"file": "src/demo/blog/templates/date_blogs.html",
 			"settings":
 			{
-				"buffer_size": 1017,
+				"buffer_size": 85,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/free4my/utils.py",
+			"contents": "",
+			"file": "src/demo/blog/templates/index.html",
+			"file_size": 62,
+			"file_write_time": 1342107836000000,
 			"settings":
 			{
-				"buffer_size": 587,
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/demo/blog/templates/_nav.html",
+			"settings":
+			{
+				"buffer_size": 503,
 				"line_ending": "Unix"
 			}
 		}
@@ -600,11 +611,22 @@
 	},
 	"file_history":
 	[
+		"/home/alex/workspace/free4my/src/demo/blog/templates/post.html",
+		"/home/alex/workspace/free4my/src/demo/blog/templates/admin_base.html",
+		"/home/alex/workspace/free4my/src/demo/blog/templates/blog_edit.html",
+		"/home/alex/workspace/free4my/src/demo/blog/templates/blog.html",
+		"/home/alex/workspace/free4my/src/demo/blog/templates/login.html",
+		"/home/alex/workspace/free4my/src/demo/blog/static/blog.css",
+		"/home/alex/workspace/free4my/src/demo/blog/templates/base.html",
+		"/home/alex/workspace/free4my/src/free4my/dynamic.py",
+		"/home/alex/workspace/free4my/src/demo/blog/templates/conf.html",
+		"/home/alex/workspace/free4my/src/free4my/session.py",
+		"/home/alex/workspace/free4my/src/demo/test.py",
+		"/home/alex/workspace/free4my/src/free4my/utils.py",
 		"/home/alex/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
 		"/home/alex/workspace/free4my/src/free4my/__init__.py",
 		"/home/alex/workspace/free4my/src/free4my/connection.py",
 		"/home/alex/workspace/free4my/src/free4my/db.py",
-		"/home/alex/workspace/free4my/src/free4my/dynamic.py",
 		"/home/alex/workspace/free4my/f4m",
 		"/home/alex/workspace/codoon/common/__init__.py",
 		"/home/alex/workspace/codoon/common/dynamic.py",
@@ -716,18 +738,7 @@
 		"/home/alex/workspace/codoon/www/sportsvisualization/sports_report.py",
 		"/home/alex/workspace/codoon/www/sportsvisualization/models.py",
 		"/home/alex/workspace/codoon/www/group/views.py",
-		"/home/alex/workspace/codoon/codoon_openapi_demo/test_site/views.py",
-		"/home/alex/workspace/codoon/Journal/__init__.py",
-		"/home/alex/workspace/codoon/codoon_openapi_demo/settings.py",
-		"/home/alex/workspace/codoon/Journal/app/oauth2.py",
-		"/home/alex/workspace/codoon/Journal/Index/views.py",
-		"/home/alex/workspace/codoon/Journal/app/application.py",
-		"/home/alex/workspace/codoon/Journal/app/__init__.py",
-		"/home/alex/workspace/codoon/Journal/test_site/views.py",
-		"/home/alex/workspace/codoon/Journal/Index/view.py",
-		"/home/alex/workspace/codoon/Journal/Index/__init__.py",
-		"/home/alex/workspace/codoon/www/invite/urls.py",
-		"/home/alex/workspace/codoon/static_root/js/profile.js"
+		"/home/alex/workspace/codoon/codoon_openapi_demo/test_site/views.py"
 	],
 	"find":
 	{
@@ -745,6 +756,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Column",
+			"log",
 			"self.session",
 			"self.session(",
 			"self.session",
@@ -851,7 +864,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -859,20 +872,22 @@
 					"file": "src/free4my/__init__.py",
 					"settings":
 					{
-						"buffer_size": 560,
+						"buffer_size": 753,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								315,
-								315
+								518,
+								518
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -882,18 +897,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "src/free4my/session.py",
+					"file": "src/demo/blog/blog.py",
 					"settings":
 					{
-						"buffer_size": 1145,
+						"buffer_size": 10871,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								644,
-								644
+								2648,
+								2648
 							]
 						],
 						"settings":
@@ -903,58 +918,56 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 1385.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "src/free4my/dynamic.py",
+					"file": "src/demo/blog/templates/blog_list.html",
 					"settings":
 					{
-						"buffer_size": 20149,
+						"buffer_size": 487,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10865,
-								10865
+								147,
+								147
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 4189.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "src/demo/test.py",
+					"file": "src/demo/blog/templates/date_blogs.html",
 					"settings":
 					{
-						"buffer_size": 1017,
+						"buffer_size": 85,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								620,
-								620
+								73,
+								73
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -964,25 +977,49 @@
 				},
 				{
 					"buffer": 4,
-					"file": "src/free4my/utils.py",
+					"file": "src/demo/blog/templates/index.html",
 					"settings":
 					{
-						"buffer_size": 587,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								292,
-								292
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/demo/blog/templates/_nav.html",
+					"settings":
+					{
+						"buffer_size": 503,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								503,
+								503
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

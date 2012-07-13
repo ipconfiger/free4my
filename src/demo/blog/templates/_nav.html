@@ -1,0 +1,20 @@
+<ul class="nav nav-pills nav-stacked">
+  <li class="active"><a href="/">Home</a></li>
+  <li>
+    {%if is_login%}
+    <a href="/admin/post">Post New Blog</a>
+    <a href="/admin/conf">Edit Configue</a>
+    <a href="/logout">Logout</a>
+    {%else%}
+    <a href="/login">Login</a>
+    {%endif%}
+  </li>
+</ul>
+<div class="alert alert-info blank20">
+  Blog in dates
+</div>
+<ul class="unstyled blank20">
+{%for f in date_files%}
+<li><a href="/{{f.date}}">{{f.date}}&nbsp;({{f.count}})</a></li>
+{%endfor%}
+</ul>

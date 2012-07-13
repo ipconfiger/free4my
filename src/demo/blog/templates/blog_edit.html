@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{%block content%}
+<h3>Edit Post</h3>
+<form class="well" action="/blog/{{blog.short_key}}" method="POST">
+  <label>Blog Title</label>
+  <input type="text" class="span8" id="title" name="title" placeholder="Put your blog tilte here…" value="{{blog.title}}">
+  <span class="help-block">Must less than 50 characters.</span>
+  <label>Blog Content</label>
+  <textarea id="content" name="content" class="span8">{{blog.content}}</textarea>
+  <span class="help-block">Use markdown to format your post.</span>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{%endblock%}

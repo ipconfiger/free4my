@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{%block content%}
+{%for data in date_list%}
+<dl>
+    <dt>{{data.date}}</dt>
+    <dd>
+        {%include "_blog_list.html"%}
+    </dd>
+</dl>
+{%endfor%}
+{%include "_page.html"%}
+{%endblock%}

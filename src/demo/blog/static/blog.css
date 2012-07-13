@@ -1,0 +1,10 @@
+.center { text-align: center; }
+.blank {clear: both;}
+.blank5 {clear: both;margin-top: 5px;}
+.blank10 {clear: both;margin-top: 10px;}
+.blank20 {clear: both;margin-top: 20px;}
+.blank50 {clear: both;margin-top: 50px;}
+#content {height:300px;}
+.fr {float: right;}
+.fl {float: left;}
+.ml20 {margin-left: 20px}

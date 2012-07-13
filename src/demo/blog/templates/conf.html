@@ -1,0 +1,71 @@
+{% extends "admin_base.html" %}
+{%block view%}
+
+<form class="form-horizontal" action="/admin/conf" method="POST">
+  <fieldset>
+    <legend>Edit the blog configure</legend>
+    <div class="control-group">
+      <label class="control-label" for="login_id">Login ID</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge" name="login_id" id="login_id" value="{{config.user_name}}">
+        <p class="help-block">user name for login</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="password">Password</label>
+      <div class="controls">
+        <input type="password" class="input-xlarge" name="password" id="password">
+        <p class="help-block">password for login</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="cpassword">Confirm Password</label>
+      <div class="controls">
+        <input type="password" class="input-xlarge" name="cpassword" id="cpassword">
+        <p class="help-block">must equle to upper field</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="site_name">Blog Name</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge" name="site_name" id="site_name" value="{{config.site_name}}" />
+        <p class="help-block">name of the blog</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="favicon">Favicon</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge" name="fav_icon" id="favicon" value="{{config.fav_icon}}" />
+        <p class="help-block">the path to the favicon</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="css">Customer CSS</label>
+      <div class="controls">
+        <textarea type="text" class="textarea" name="css" id="css">{{config.css}}</textarea>
+        <p class="help-block">the customer style sheet on page</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="jscript">Customer Javascript</label>
+      <div class="controls">
+        <textarea type="text" class="textarea" name="jscript" id="jscript">{{config.js}}</textarea>
+        <p class="help-block">the customer style sheet on page</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="copyright">Copyright</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge" name="copyright" id="copyright" value="{{config.copyright}}" />
+        <p class="help-block">the path to the favicon</p>
+      </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+  </fieldset>
+</form>
+
+{%endblock%}

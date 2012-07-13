@@ -1,0 +1,14 @@
+{%for blog in data.blogs%}
+<div class="well blank10">
+    <h3>{{blog.title}}</h3>
+    <p class="summary">{{blog.content|safe|summary}}</p>
+    <div>
+        <div class="fr ml20"><span class="badge badge-info">{{blog.view_count}}viewers</span></div>
+        {%if is_login%}
+        <div class="fr ml20"> <a href="javascript:void(0);"> Delete </a> </div>
+        <div class="fr"> <a href="/edit/blog/{{blog.short_key}}"> Edit </a> </div>
+        {%endif%}
+        <div class="blank"></div>
+    </div>
+</div>
+{%endfor%}
