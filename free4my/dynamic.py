@@ -3,7 +3,11 @@ __author__ = 'Alexander Li'
 
 import time
 import uuid
-from zlib import compress, decompress
+try:
+    from zlib import compress, decompress
+except:
+    compress=lambda s:s
+    decompress=lambda s:s
 from cPickle import dumps, loads
 from logging import log, WARNING, ERROR,INFO
 from utils import tou, tob
@@ -242,8 +246,8 @@ class Manager(object):
             index_acc.push_index(data)
         return data
 
-    def get(self, id):
-        data = self.obj_acc.get_object(id=id)
+    def get(self, id,use_cache=True):
+        data = self.obj_acc.get_object(id=id,use_cache=use_cache)
         if data:
             return self.data_type(**data)
 
@@ -315,7 +319,7 @@ INDEX (`updated`)
             error_arr=[]
             if missing_idx:
                 for item in data:
-                    data_item = self.get(item.id)
+                    data_item = self.get(item.id,use_cache=False)
                     print "%s/%s complete %s errors"%(idx,total,len(error_arr))
                     for idx_obj in missing_idx:
                         if not idx_obj.push_index(data_item):
@@ -525,17 +529,17 @@ class ObjectAcc(object):
         self.table = table
         self.session=session
 
-    def get_object(self, id=None):
+    def get_object(self, id=None,use_cache=True):
         session=self.session()
         raw_id = "o-%s" % tob(id)
-        try:
-            if session.check_obj(raw_id):
-                data = session.get_obj(raw_id)
-                if "_auto_id" in data:
-                    return loads(data)
-        except:
-            log(ERROR,"REDIS read error")
-
+        if use_cache:
+            try:
+                if session.check_obj(raw_id):
+                    data = session.get_obj(raw_id)
+                    if "_auto_id" in data:
+                        return loads(data)
+            except:
+                log(ERROR,"CACHE read error")
         sql = "SELECT `auto_id`,`id`,`object`,`updated` FROM `"+self.table+"` WHERE `id`=%s"
         rows = session.connection.query(sql, tou(id))
         if rows:
@@ -545,10 +549,11 @@ class ObjectAcc(object):
             obj.update(dict(id=id))
             obj["_updated"] = rows[0].updated
             obj["_auto_id"] =rows[0].auto_id
-            try:
-                session.set_obj(raw_id,dumps(obj))
-            except:
-                log(ERROR,"REDIS write error")
+            if use_cache:
+                try:
+                    session.set_obj(raw_id,dumps(obj))
+                except:
+                    log(ERROR,"CACHE write error")
             return obj
 
     def set_object(self, id=None, object=None):
@@ -563,7 +568,6 @@ class ObjectAcc(object):
         sql = "INSERT INTO `" + self.table + "` (`id`,`object`,`updated`) VALUES (%s,%s,%s)"
         ret=session.connection.execute(sql, entity_id, datas,timestamp)
         raw_id = "o-%s" % tob(entity_id)
-        session.set_obj(raw_id,r_data)
         return entity_id,ret
 
     def update_object(self,object=None):
@@ -578,7 +582,7 @@ class ObjectAcc(object):
         try:
             session.set_obj(raw_id,dumps(object))
         except:
-            log(ERROR,"REDIS update error")
+            log(ERROR,"CACHE update error")
 
     def delete_object(self,object=None):
         session=self.session()
@@ -589,4 +593,4 @@ class ObjectAcc(object):
         try:
             session.del_obj(raw_id)
         except:
-            log(ERROR,"REDIS delete error")
+            log(ERROR,"CACHE delete error")
