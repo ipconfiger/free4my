@@ -11,7 +11,7 @@ Installing
 
 #. Install from the pypi index. ``$ sudo pip install free4my``
 
-#.  Clone source code from github with the following command:
+#.  Clone source code from github with the following command::
 
         $ git clone https://github.com/ipconfiger/free4my.git
         $ sudo python setup.py install
